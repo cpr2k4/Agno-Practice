@@ -1,6 +1,10 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
+from auth.deps import get_current_user
+from auth.router import router as auth_router
+from db import Base, engine
+from models import User
 from schemas import ChatRequest, ChatResponse
 from services.agno_agent import send_email_about_topic
 
@@ -14,6 +18,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth_router)
+
+
+@app.on_event("startup")
+def on_startup() -> None:
+    Base.metadata.create_all(bind=engine)
+
 
 @app.get("/")
 def read_root():
@@ -21,7 +32,10 @@ def read_root():
 
 
 @app.post("/send-email", response_model=ChatResponse)
-def ask(request: ChatRequest):
+def ask(
+    request: ChatRequest,
+    _current_user: User = Depends(get_current_user),
+):
     topic = request.topic.strip()
     if not topic:
         raise HTTPException(status_code=400, detail="Topic cannot be empty")
