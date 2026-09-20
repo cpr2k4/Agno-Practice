@@ -55,34 +55,38 @@ function App() {
   }
 
   return (
-    <main className="app">
-      <h1 className="title">Email agent</h1>
-      <form className="compose" onSubmit={handleSubmit}>
-        <label htmlFor="mail-message" className="sr-only">
-          What mail do you want to send?
-        </label>
-        <textarea
-          id="mail-message"
-          className="message"
-          value={message}
-          onChange={(event) => setMessage(event.target.value)}
-          placeholder="What mail do you want to send?"
-          rows={6}
-          disabled={status === 'loading'}
-        />
-        <button type="submit" className="send" disabled={status === 'loading'}>
-          {status === 'loading' ? 'Sending…' : 'Send'}
-        </button>
-        {feedback ? (
-          <p
-            className={`feedback feedback--${status === 'error' ? 'error' : 'success'}`}
-            role="status"
-          >
-            {feedback}
-          </p>
-        ) : null}
-      </form>
-    </main>
+    <div className="app">
+      <nav className="navbar" aria-label="Main">
+        <h1 className="navbar__title">Email agent</h1>
+      </nav>
+      <main className="content">
+        <form className="compose" onSubmit={handleSubmit}>
+          <label htmlFor="mail-message" className="sr-only">
+            What mail do you want to send?
+          </label>
+          <textarea
+            id="mail-message"
+            className="message"
+            value={message}
+            onChange={(event) => setMessage(event.target.value)}
+            placeholder="What mail do you want to send?"
+            rows={6}
+            disabled={status === 'loading'}
+          />
+          <button type="submit" className="send" disabled={status === 'loading'}>
+            {status === 'loading' ? 'Sending…' : 'Send'}
+          </button>
+          {feedback ? (
+            <p
+              className={`feedback feedback--${status === 'error' ? 'error' : 'success'}`}
+              role="status"
+            >
+              {feedback}
+            </p>
+          ) : null}
+        </form>
+      </main>
+    </div>
   )
 }
 
